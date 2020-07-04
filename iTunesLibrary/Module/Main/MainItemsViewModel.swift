@@ -22,6 +22,7 @@ enum ItemKind: String {
 class MainItemsViewModel {
     
     private var items: [Results] = [Results]()
+    private var filterRules = ["song", "feature-movie", "podcast"]
     
     private var cellViewModels: [ItemListCellViewModel] = [ItemListCellViewModel]() {
         didSet {
@@ -55,7 +56,7 @@ class MainItemsViewModel {
     var updateLoadingStatus: ((_ show: Bool)->())?
 
     
-    func fetchItemsWith(term: String, and mediaType: String) {
+    func fetchItemsWith(term: String, mediaType: String) {
         self.isLoading = true
         APIClient.shared.search(term: term, mediaType: mediaType) { [weak self] (success, errorMessage, responseData) in
             self?.isLoading = false
@@ -76,9 +77,8 @@ class MainItemsViewModel {
     }
 
     private func processFetchedItem( items: [Results] ) {
-        self.items = items
         var vms = [ItemListCellViewModel]()
-        for item in items {
+        for item in items where filterRules.contains(item.kind ?? "") {
             vms.append(createCellViewModel(item: item) )
         }
         self.cellViewModels = vms

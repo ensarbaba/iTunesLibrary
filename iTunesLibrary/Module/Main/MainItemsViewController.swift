@@ -20,7 +20,8 @@ class MainItemsViewController: UIViewController {
                                              bottom: 10.0,
                                              right: 10.0)
     private var spacing:CGFloat = 10
-    
+    var rightBarButtonItem: UIBarButtonItem?
+
     lazy var viewModel: MainItemsViewModel = {
         return MainItemsViewModel()
     }()
@@ -34,10 +35,27 @@ class MainItemsViewController: UIViewController {
         //Data Binding
         initVM()
     }
+   
     private func initUI() {
-        self.navigationItem.title = "Items"
         self.searchBar.delegate = self
         self.searchBar.placeholder = "Search for an item"
+            rightBarButtonItem = UIBarButtonItem(title: "All", style: .plain, target: self, action: #selector(showMediaTypes))
+            
+            rightBarButtonItem?.tintColor = .blue
+            let navitem = UINavigationItem()
+            navitem.title = "Items"
+            
+            navitem.rightBarButtonItem = rightBarButtonItem
+        self.navigationController?.navigationBar.setItems([navitem], animated: true)
+        
+    }
+    @objc func showMediaTypes() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let typesVC = storyboard.instantiateViewController(withIdentifier: "typesVC") as! MediaTypeViewController
+        typesVC.modalPresentationStyle = .fullScreen
+        typesVC.delegate = self
+        self.present(typesVC, animated: false)
+
     }
     func initCollectionView() {
         itemsCollectionView.dataSource = self
@@ -107,7 +125,7 @@ class MainItemsViewController: UIViewController {
     }
     @objc func searchFor() {
         guard let searchText = searchBar.text else { return }
-        viewModel.fetchItemsWith(term: searchText, and: viewModel.selectedMediaType)
+        viewModel.fetchItemsWith(term: searchText, mediaType: viewModel.selectedMediaType)
     }
     
 }
@@ -136,6 +154,22 @@ extension MainItemsViewController: UICollectionViewDataSource, UICollectionViewD
         let size = Int((collectionView.bounds.size.width - totalSpace) / CGFloat(numberOfItem))
         return CGSize(width: size, height: size)
     }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let item = viewModel.getCellViewModel(at: indexPath)
+        do {
+            try PersistenceManager.shared.insertItemWith(id: item.id, seen: true, filtered: false)
+        } catch {
+            print("something went wrong")
+        }
+        
+//        do {
+//           let items = try PersistenceManager.shared.fetchItems()
+//            print(items.first)
+//        } catch {
+//
+//        }
+    }
+
 
 }
 
@@ -144,5 +178,16 @@ extension MainItemsViewController:UISearchBarDelegate {
         
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(searchFor), object: nil)
         self.perform(#selector(searchFor), with: nil, afterDelay: 1.5)
+    }
+}
+
+extension MainItemsViewController: MediaTypeDelegate {
+    func didMediaTypeSelect(type: String) {
+        if type != viewModel.selectedMediaType {
+            viewModel.selectedMediaType = type.lowercased()
+            rightBarButtonItem?.title = type
+            guard let searchText = searchBar.text else { return }
+            viewModel.fetchItemsWith(term: searchText, mediaType: viewModel.selectedMediaType)
+        }
     }
 }

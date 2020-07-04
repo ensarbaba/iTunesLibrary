@@ -8,12 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		66155638E1C99C8F536577CE /* Pods_iTunesLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB7AE289DC42282EA14F4F75 /* Pods_iTunesLibrary.framework */; };
+		F64860CA24B1387200C14684 /* UserHistory+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64860C824B1387200C14684 /* UserHistory+CoreDataClass.swift */; };
+		F64860CB24B1387200C14684 /* UserHistory+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F64860C924B1387200C14684 /* UserHistory+CoreDataProperties.swift */; };
 		F67D207A24B0A8D700B1B32B /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D207924B0A8D700B1B32B /* APIClient.swift */; };
 		F67D207C24B0C42600B1B32B /* SearchResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D207B24B0C42600B1B32B /* SearchResponse.swift */; };
 		F67D207E24B0C42C00B1B32B /* Results.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D207D24B0C42C00B1B32B /* Results.swift */; };
 		F67D208024B0DB1100B1B32B /* ItemsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D207F24B0DB1100B1B32B /* ItemsDetailViewController.swift */; };
 		F67D208224B0E09A00B1B32B /* MainItemsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D208124B0E09A00B1B32B /* MainItemsViewModel.swift */; };
 		F67D208824B0F47800B1B32B /* ItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D208724B0F47800B1B32B /* ItemCollectionViewCell.swift */; };
+		F67D208F24B1343C00B1B32B /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67D208E24B1343C00B1B32B /* PersistenceManager.swift */; };
+		F699BEC524B1436700421087 /* MediaTypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F699BEC324B1436700421087 /* MediaTypeViewController.swift */; };
 		F69D537A24B098CB0028B90D /* UserHistory.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F69D537824B098CB0028B90D /* UserHistory.xcdatamodeld */; };
 		F6A2EF0924B093B40099DEB9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A2EF0824B093B40099DEB9 /* AppDelegate.swift */; };
 		F6A2EF0D24B093B40099DEB9 /* MainItemsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6A2EF0C24B093B40099DEB9 /* MainItemsViewController.swift */; };
@@ -25,12 +29,16 @@
 /* Begin PBXFileReference section */
 		CB7AE289DC42282EA14F4F75 /* Pods_iTunesLibrary.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iTunesLibrary.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC5CBA3F00738175D03E7E09 /* Pods-iTunesLibrary.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iTunesLibrary.release.xcconfig"; path = "Target Support Files/Pods-iTunesLibrary/Pods-iTunesLibrary.release.xcconfig"; sourceTree = "<group>"; };
+		F64860C824B1387200C14684 /* UserHistory+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UserHistory+CoreDataClass.swift"; path = "iTunesLibrary/Persistence/UserHistory+CoreDataClass.swift"; sourceTree = SOURCE_ROOT; };
+		F64860C924B1387200C14684 /* UserHistory+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "UserHistory+CoreDataProperties.swift"; path = "iTunesLibrary/Persistence/UserHistory+CoreDataProperties.swift"; sourceTree = SOURCE_ROOT; };
 		F67D207924B0A8D700B1B32B /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
 		F67D207B24B0C42600B1B32B /* SearchResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResponse.swift; sourceTree = "<group>"; };
 		F67D207D24B0C42C00B1B32B /* Results.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Results.swift; sourceTree = "<group>"; };
 		F67D207F24B0DB1100B1B32B /* ItemsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemsDetailViewController.swift; sourceTree = "<group>"; };
 		F67D208124B0E09A00B1B32B /* MainItemsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainItemsViewModel.swift; sourceTree = "<group>"; };
 		F67D208724B0F47800B1B32B /* ItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		F67D208E24B1343C00B1B32B /* PersistenceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
+		F699BEC324B1436700421087 /* MediaTypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaTypeViewController.swift; sourceTree = "<group>"; };
 		F69D537924B098CB0028B90D /* UserHistory.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = UserHistory.xcdatamodel; sourceTree = "<group>"; };
 		F6A2EF0524B093B40099DEB9 /* iTunesLibrary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTunesLibrary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6A2EF0824B093B40099DEB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -93,7 +101,6 @@
 			children = (
 				F67D208424B0E21600B1B32B /* Main */,
 				F67D208524B0E21A00B1B32B /* Detail */,
-				F67D207F24B0DB1100B1B32B /* ItemsDetailViewController.swift */,
 			);
 			path = Module;
 			sourceTree = "<group>";
@@ -101,8 +108,8 @@
 		F67D208424B0E21600B1B32B /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				F6A2EF0C24B093B40099DEB9 /* MainItemsViewController.swift */,
 				F67D208624B0F45F00B1B32B /* Cell */,
+				F6A2EF0C24B093B40099DEB9 /* MainItemsViewController.swift */,
 				F67D208124B0E09A00B1B32B /* MainItemsViewModel.swift */,
 			);
 			path = Main;
@@ -111,6 +118,7 @@
 		F67D208524B0E21A00B1B32B /* Detail */ = {
 			isa = PBXGroup;
 			children = (
+				F67D207F24B0DB1100B1B32B /* ItemsDetailViewController.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -119,8 +127,20 @@
 			isa = PBXGroup;
 			children = (
 				F67D208724B0F47800B1B32B /* ItemCollectionViewCell.swift */,
+				F699BEC324B1436700421087 /* MediaTypeViewController.swift */,
 			);
 			path = Cell;
+			sourceTree = "<group>";
+		};
+		F67D208924B1330F00B1B32B /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				F64860C824B1387200C14684 /* UserHistory+CoreDataClass.swift */,
+				F64860C924B1387200C14684 /* UserHistory+CoreDataProperties.swift */,
+				F67D208E24B1343C00B1B32B /* PersistenceManager.swift */,
+				F69D537824B098CB0028B90D /* UserHistory.xcdatamodeld */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 		F6A2EEFC24B093B40099DEB9 = {
@@ -145,7 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				F6A2EF0824B093B40099DEB9 /* AppDelegate.swift */,
-				F69D537824B098CB0028B90D /* UserHistory.xcdatamodeld */,
+				F67D208924B1330F00B1B32B /* Persistence */,
 				F67D208324B0E20E00B1B32B /* Module */,
 				F67D207824B0A8CB00B1B32B /* API */,
 				F67D207324B0A73B00B1B32B /* Model */,
@@ -274,13 +294,17 @@
 			files = (
 				F67D208024B0DB1100B1B32B /* ItemsDetailViewController.swift in Sources */,
 				F67D207E24B0C42C00B1B32B /* Results.swift in Sources */,
+				F699BEC524B1436700421087 /* MediaTypeViewController.swift in Sources */,
 				F6A2EF0D24B093B40099DEB9 /* MainItemsViewController.swift in Sources */,
+				F64860CA24B1387200C14684 /* UserHistory+CoreDataClass.swift in Sources */,
+				F67D208F24B1343C00B1B32B /* PersistenceManager.swift in Sources */,
 				F67D208824B0F47800B1B32B /* ItemCollectionViewCell.swift in Sources */,
 				F67D207C24B0C42600B1B32B /* SearchResponse.swift in Sources */,
 				F6A2EF0924B093B40099DEB9 /* AppDelegate.swift in Sources */,
 				F69D537A24B098CB0028B90D /* UserHistory.xcdatamodeld in Sources */,
 				F67D208224B0E09A00B1B32B /* MainItemsViewModel.swift in Sources */,
 				F67D207A24B0A8D700B1B32B /* APIClient.swift in Sources */,
+				F64860CB24B1387200C14684 /* UserHistory+CoreDataProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

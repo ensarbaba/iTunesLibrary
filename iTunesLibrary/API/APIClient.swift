@@ -16,7 +16,7 @@ class APIClient {
        let path = "term=\(term)&media=\(mediaType)"
         guard let escapedString = path.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) else {return}
 
-        get(request: clientURLRequest(path: "search?\(escapedString)")) { (success, object) -> () in
+        get(request: clientURLRequest(path: "search?\(escapedString)&limit=100")) { (success, object) -> () in
                  if success && object != nil {
                     let decodedResponse = try? JSONDecoder().decode(SearchResponse.self, from: object!)
                     completion(true, nil, decodedResponse)
