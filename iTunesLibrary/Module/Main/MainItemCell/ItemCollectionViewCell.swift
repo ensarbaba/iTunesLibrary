@@ -16,6 +16,9 @@ class ItemCollectionViewCell: UICollectionViewCell {
          didSet {
              itemLabel.text = itemListCellViewModel?.name
             itemImageView.downloaded(from: itemListCellViewModel?.imageUrl ?? "")
+            DispatchQueue.main.async { [weak self] in
+                self?.contentView.alpha = self?.itemListCellViewModel?.seen ?? false ? 0.5 : 1.0
+            }
         }
      }
 }

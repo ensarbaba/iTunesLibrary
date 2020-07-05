@@ -13,6 +13,7 @@ struct ItemListCellViewModel {
     let id: Int
     let imageUrl: String
     let kind: String
+    var seen: Bool
 }
 enum ItemKind: String {
     case song = "song"
@@ -21,15 +22,17 @@ enum ItemKind: String {
 }
 class MainItemsViewModel {
     
-    private var items: [Results] = [Results]()
+    private var resultItems = [ItemListCellViewModel]()
     private var filterRules = ["song", "feature-movie", "podcast"]
-    
+    private var filteredItems = [Int32]()
+    private var seenItems = [Int32]()
+
     private var cellViewModels: [ItemListCellViewModel] = [ItemListCellViewModel]() {
         didSet {
             self.reloadTableViewClosure?()
         }
     }
-
+    
     var isLoading: Bool = false {
         didSet {
             self.updateLoadingStatus?(isLoading)
@@ -54,7 +57,6 @@ class MainItemsViewModel {
     var reloadTableViewClosure: (()->())?
     var showAlertClosure: (()->())?
     var updateLoadingStatus: ((_ show: Bool)->())?
-
     
     func fetchItemsWith(term: String, mediaType: String) {
         self.isLoading = true
@@ -67,27 +69,45 @@ class MainItemsViewModel {
             }
         }
     }
-
+    
     func getCellViewModel( at indexPath: IndexPath ) -> ItemListCellViewModel {
         return cellViewModels[indexPath.row]
     }
-
+    func removeCellViewModel( at indexPath: IndexPath ) {
+        cellViewModels.remove(at: indexPath.row)
+    }
     func createCellViewModel(item: Results ) -> ItemListCellViewModel {
-        return ItemListCellViewModel(name: item.trackName ?? "", id: item.trackId ?? 0, imageUrl: item.artworkUrl100 ?? "", kind: item.kind ?? "")
+        return ItemListCellViewModel(name: item.trackName ?? "", id: item.trackId ?? 0, imageUrl: item.artworkUrl100 ?? "", kind: item.kind ?? "", seen: seenItems.contains(Int32(item.trackId ?? 0)))
     }
-
+    
     private func processFetchedItem( items: [Results] ) {
-        var vms = [ItemListCellViewModel]()
-        for item in items where filterRules.contains(item.kind ?? "") {
-            vms.append(createCellViewModel(item: item) )
+        
+        resultItems = [ItemListCellViewModel]()
+        do {
+            filteredItems = try PersistenceManager.shared.fetchFiltered()
+            seenItems = try PersistenceManager.shared.fetchSeen()
+        } catch {
+            print("error while fetching")
         }
-        self.cellViewModels = vms
+        //Only Song, Movie, Podcast Kinds And
+        //Not Filtered Items Should Be Fetched
+        for item in items where filterRules.contains(item.kind ?? "") && !filteredItems.contains(Int32(item.trackId ?? 0)) {
+            resultItems.append(createCellViewModel(item: item) )
+        }
+      
+        self.cellViewModels = resultItems
     }
+    func updateSeenItems() {
+        do {
+            seenItems = try PersistenceManager.shared.fetchSeen()
+        } catch {
+            print("error while fetching")
+        }
+        for index in 0 ..< resultItems.count where seenItems.contains(Int32(resultItems[index].id)) {
+            resultItems[index].seen = true
+        }
+        self.cellViewModels = resultItems
 
-}
-
-extension MainItemsViewModel {
-    func userPressed( at indexPath: IndexPath ){
-        self.selectedItem = self.items[indexPath.row]
     }
+    
 }

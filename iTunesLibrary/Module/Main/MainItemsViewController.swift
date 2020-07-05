@@ -14,14 +14,15 @@ class MainItemsViewController: UIViewController {
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var noDataLabel: UILabel!
+    @IBOutlet weak var filterMediaTypeButton: UIBarButtonItem!
     
     private var sectionInsets = UIEdgeInsets(top: 10.0,
                                              left: 10.0,
                                              bottom: 10.0,
                                              right: 10.0)
     private var spacing:CGFloat = 10
-    var rightBarButtonItem: UIBarButtonItem?
-
+//    var rightBarButtonItem: UIBarButtonItem?
+    
     lazy var viewModel: MainItemsViewModel = {
         return MainItemsViewModel()
     }()
@@ -32,30 +33,25 @@ class MainItemsViewController: UIViewController {
         //Initialize and modify items collection view
         initCollectionView()
         
-        //Data Binding
-        initVM()
+        initViewModel()
     }
-   
+    
     private func initUI() {
         self.searchBar.delegate = self
         self.searchBar.placeholder = "Search for an item"
-            rightBarButtonItem = UIBarButtonItem(title: "All", style: .plain, target: self, action: #selector(showMediaTypes))
-            
-            rightBarButtonItem?.tintColor = .blue
-            let navitem = UINavigationItem()
-            navitem.title = "Items"
-            
-            navitem.rightBarButtonItem = rightBarButtonItem
-        self.navigationController?.navigationBar.setItems([navitem], animated: true)
+//        rightBarButtonItem = UIBarButtonItem(title: "All", style: .plain, target: self, action: #selector(showMediaTypes))
+        
+        filterMediaTypeButton?.tintColor = .blue
+//        let navitem = UINavigationItem()
+//        navitem.title = "Items"
+        
+//        navitem.rightBarButtonItem = rightBarButtonItem
+//        self.navigationController?.navigationBar.setItems([navitem], animated: true)
         
     }
     @objc func showMediaTypes() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let typesVC = storyboard.instantiateViewController(withIdentifier: "typesVC") as! MediaTypeViewController
-        typesVC.modalPresentationStyle = .fullScreen
-        typesVC.delegate = self
-        self.present(typesVC, animated: false)
-
+       
+        
     }
     func initCollectionView() {
         itemsCollectionView.dataSource = self
@@ -67,10 +63,11 @@ class MainItemsViewController: UIViewController {
         flowLayout.sectionInset = sectionInsets
         
     }
-    func initVM() {
+    func initViewModel() {
         noDataLabel.alpha = 1.0
         itemsCollectionView.alpha = 0.0
-
+       
+        //Data Binding
         viewModel.showAlertClosure = { [weak self] () in
             DispatchQueue.main.async {
                 if let message = self?.viewModel.alertMessage {
@@ -123,6 +120,14 @@ class MainItemsViewController: UIViewController {
             }
         })
     }
+    @IBAction func filterButtonTapped(_ sender: Any) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+               let typesVC = storyboard.instantiateViewController(withIdentifier: "typesVC") as! MediaTypeViewController
+               typesVC.modalPresentationStyle = .fullScreen
+               typesVC.delegate = self
+               self.present(typesVC, animated: false)
+    }
+    
     @objc func searchFor() {
         guard let searchText = searchBar.text else { return }
         viewModel.fetchItemsWith(term: searchText, mediaType: viewModel.selectedMediaType)
@@ -158,19 +163,19 @@ extension MainItemsViewController: UICollectionViewDataSource, UICollectionViewD
         let item = viewModel.getCellViewModel(at: indexPath)
         do {
             try PersistenceManager.shared.insertItemWith(id: item.id, seen: true, filtered: false)
+            viewModel.updateSeenItems()
         } catch {
             print("something went wrong")
         }
-        
-//        do {
-//           let items = try PersistenceManager.shared.fetchItems()
-//            print(items.first)
-//        } catch {
-//
-//        }
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let detailsVC = storyboard.instantiateViewController(withIdentifier: "detailsVC") as! ItemsDetailViewController
+        detailsVC.selectedItem = item
+        detailsVC.selectedIndexPath = indexPath
+        detailsVC.popDelegate = self
+        self.navigationController?.pushViewController(detailsVC, animated: true)
+    
     }
-
-
+    
 }
 
 extension MainItemsViewController:UISearchBarDelegate {
@@ -181,11 +186,19 @@ extension MainItemsViewController:UISearchBarDelegate {
     }
 }
 
-extension MainItemsViewController: MediaTypeDelegate {
+extension MainItemsViewController: MediaTypeDelegate, ItemsDetailDelegate {
+    
+    func itemsDetailDidPop(indexPath: IndexPath) {
+            self.itemsCollectionView.performBatchUpdates({
+                viewModel.removeCellViewModel(at: indexPath)
+                self.itemsCollectionView.deleteItems(at: [indexPath])
+           }, completion:nil)
+    }
+    
     func didMediaTypeSelect(type: String) {
         if type != viewModel.selectedMediaType {
             viewModel.selectedMediaType = type.lowercased()
-            rightBarButtonItem?.title = type
+            filterMediaTypeButton?.title = type
             guard let searchText = searchBar.text else { return }
             viewModel.fetchItemsWith(term: searchText, mediaType: viewModel.selectedMediaType)
         }
