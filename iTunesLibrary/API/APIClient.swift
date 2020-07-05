@@ -16,12 +16,11 @@ class APIClient {
        let path = "term=\(term)&media=\(mediaType)"
         guard let escapedString = path.addingPercentEncoding(withAllowedCharacters:NSCharacterSet.urlQueryAllowed) else {return}
 
-        get(request: clientURLRequest(path: "search?\(escapedString)&limit=100")) { (success, object) -> () in
+        get(request: clientURLRequest(path: "search?\(escapedString)&limit=100")) { (success, message, object) -> () in
                  if success && object != nil {
                     let decodedResponse = try? JSONDecoder().decode(SearchResponse.self, from: object!)
                     completion(true, nil, decodedResponse)
                  } else {
-                     let message = "there was an error"
                     completion(true, message, nil)
                  }
          }
@@ -39,24 +38,28 @@ class APIClient {
         
         return request
     }
-    private func post(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: Data?) -> ()) {
+    private func post(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ message: String?, _ object: Data?) -> ()) {
         dataTask(request: request, method: "POST", completion: completion)
     }
 
-    private func put(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: Data?) -> ()) {
+    private func put(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ message: String?, _ object: Data?) -> ()) {
         dataTask(request: request, method: "PUT", completion: completion)
     }
 
-    private func get(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ object: Data?) -> ()) {
+    private func get(request: NSMutableURLRequest, completion: @escaping (_ success: Bool, _ message: String?, _ object: Data?) -> ()) {
         dataTask(request: request, method: "GET", completion: completion)
     }
-    private func dataTask(request: NSMutableURLRequest, method: String, completion: @escaping (_ success: Bool, _ object: Data?) -> ()) {
+    private func dataTask(request: NSMutableURLRequest, method: String, completion: @escaping (_ success: Bool, _ message: String?, _ object: Data?) -> ()) {
+        // Checking internet connection availability
+        if !Reachability.isConnectedToNetwork() {
+            completion(false, "no internet connection", nil)
+        }
         request.httpMethod = method
         URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
             if let responseData = data {
-                completion(true, responseData)
+                completion(true, nil, responseData)
             } else {
-                completion(false, nil)
+                completion(false, error.debugDescription, nil)
             }
         }.resume()
 
