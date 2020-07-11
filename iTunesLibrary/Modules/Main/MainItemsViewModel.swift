@@ -26,7 +26,13 @@ class MainItemsViewModel {
     private var filterRules = ["song", "feature-movie", "podcast"]
     private var filteredItems = [Int32]()
     private var seenItems = [Int32]()
+   
+    var apiService: APIClientProtocol?
 
+    init(apiService: APIClientProtocol = APIClient()) {
+           self.apiService = apiService
+    }
+    
     private var cellViewModels: [ItemListCellViewModel] = [ItemListCellViewModel]() {
         didSet {
             self.reloadTableViewClosure?()
@@ -48,9 +54,7 @@ class MainItemsViewModel {
     var numberOfItems: Int {
         return cellViewModels.count
     }
-    
-    var isAllowSegue: Bool = false
-    
+
     var selectedItem: Results?
     var selectedMediaType: String = "all"
     
@@ -60,7 +64,8 @@ class MainItemsViewModel {
     
     func fetchItemsWith(term: String, mediaType: String) {
         self.isLoading = true
-        APIClient.shared.search(term: term, mediaType: mediaType) { [weak self] (success, errorMessage, responseData) in
+        guard let api = self.apiService else {self.alertMessage = "API is nil"; return}
+        api.search(term: term, mediaType: mediaType) { [weak self] (success, errorMessage, responseData) in
             self?.isLoading = false
             if let message = errorMessage {
                 self?.alertMessage = message

@@ -7,10 +7,14 @@
 //
 
 import Foundation
+protocol APIClientProtocol: class {
+    func search(term: String, mediaType: String, completion: @escaping (_ success: Bool, _ message: String?, _ response: SearchResponse?) -> ())
+    
+}
+class APIClient: APIClientProtocol {
 
-class APIClient {
     static let shared = APIClient()
-    private init() {}
+    init() {}
     
     func search(term: String, mediaType: String = "all", completion: @escaping (_ success: Bool, _ message: String?, _ response: SearchResponse?) -> ()) {
        let path = "term=\(term)&media=\(mediaType)"
